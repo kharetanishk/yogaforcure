@@ -1,53 +1,28 @@
-"use client";
-
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
 import Image from "next/image";
 import { Check } from "lucide-react";
 
-const benefits = [
-  "I observe how your body moves",
-  "I understand different body needs",
-  "I don't push randomly — I guide intelligently",
-  "I motivate you when discipline drops",
-  "I stay with you until you see results",
-];
-
 export default function WhyLearnWithMe() {
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
-
   return (
     <section
       id="why-learn-with-me"
-      ref={sectionRef}
       className="relative w-full bg-[#1a3a1a] py-16 sm:py-20 md:py-24 lg:py-32 scroll-mt-24 sm:scroll-mt-28"
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
-          transition={{ duration: 0.9 }}
-          className="flex flex-col lg:flex-row items-center lg:items-start gap-12 lg:gap-16 xl:gap-20"
-        >
-          {/* Left Column: Instructor Image + name as one centered unit */}
+        <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12 lg:gap-16 xl:gap-20">
+          {/* Left Column: Instructor Image */}
           <div className="shrink-0 w-full lg:w-auto flex justify-center">
             <div className="flex flex-col items-center w-[min(100%,16rem)] sm:w-80 lg:w-96">
               <div className="relative w-full aspect-square">
-                {/* Outer subtle ring */}
                 <div className="absolute inset-0 rounded-full border-2 border-[#9caf88]/30" />
-                {/* Middle ring */}
                 <div className="absolute inset-2 rounded-full border border-[#9caf88]/20" />
-                {/* Image container */}
                 <div className="absolute inset-4 rounded-full overflow-hidden bg-[#ede8e0]">
                   <Image
                     src="/gallery_yoga/neha_2.jpeg"
-                    alt="Yoga instructor Neha"
+                    alt="Experienced Indian yoga instructor Neha teaching online yoga classes in English"
                     width={400}
                     height={400}
                     sizes="(max-width: 640px) 256px, (max-width: 1024px) 320px, 384px"
-                    className="w-full h-full object-cover"
-                    loading="lazy"
+                    priority={false}
                   />
                 </div>
               </div>
@@ -59,62 +34,70 @@ export default function WhyLearnWithMe() {
 
           {/* Right Column: Content */}
           <div className="flex-1 space-y-6 sm:space-y-8 text-left">
-            {/* Heading */}
+            {/* SEO Heading */}
             <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl font-semibold text-[#faf8f5] leading-tight">
-              Why Learn With Me?
+              Why Learn Yoga Online with an Experienced Instructor?
             </h2>
 
-            {/* Body Text */}
+            {/* Intro Paragraph */}
             <p className="text-lg sm:text-xl md:text-2xl lg:text-xl xl:text-2xl text-[#f5f1eb] leading-relaxed max-w-3xl">
-              I've been teaching yoga for 10+ years, and what sets my classes apart is not just experience — it's understanding people.
+              I am an experienced Indian yoga instructor with over 10 years of
+              teaching practice, offering live online yoga classes in clear,
+              fluent English for students around the world.
             </p>
 
-            {/* Bullet Points */}
+            {/* Benefits List */}
             <ul className="space-y-4 sm:space-y-5 pt-2">
-              {benefits.map((benefit, index) => (
-                <motion.li
-                  key={index}
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={
-                    isInView
-                      ? { opacity: 1, x: 0 }
-                      : { opacity: 0, x: -12 }
-                  }
-                  transition={{
-                    duration: 0.6,
-                    delay: 0.3 + index * 0.1,
-                  }}
-                  className="flex items-start gap-4"
-                >
-                  <div className="flex-shrink-0 mt-1">
-                    <Check className="w-5 h-5 sm:w-6 sm:h-6 text-[#9caf88]" strokeWidth={2.5} />
-                  </div>
+              {[
+                "I carefully observe your posture and movement during live online yoga classes",
+                "I understand different body types, limitations, and pain patterns",
+                "I guide with experience — not random instructions or unsafe pushing",
+                "I teach yoga in fluent English, so every instruction feels clear and confident",
+                "I stay personally involved until you feel real strength, flexibility, and relief",
+              ].map((benefit, index) => (
+                <li key={index} className="flex items-start gap-4">
+                  <span className="flex-shrink-0 mt-1">
+                    <Check
+                      className="w-5 h-5 sm:w-6 sm:h-6 text-[#9caf88]"
+                      strokeWidth={2.5}
+                    />
+                  </span>
                   <span className="text-base sm:text-lg md:text-xl lg:text-lg xl:text-xl text-[#f5f1eb] leading-relaxed">
                     {benefit}
                   </span>
-                </motion.li>
+                </li>
               ))}
             </ul>
 
-            {/* Closing Paragraph */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="pt-4 space-y-4"
-            >
+            {/* Authority & Trust */}
+            <div className="pt-4 space-y-4">
               <p className="text-lg sm:text-xl md:text-2xl lg:text-xl xl:text-2xl text-[#f5f1eb] leading-relaxed max-w-3xl">
-                I don't believe in quick fixes.
+                I don’t believe in quick fixes or generic routines.
               </p>
+
               <p className="text-lg sm:text-xl md:text-2xl lg:text-xl xl:text-2xl text-[#f5f1eb] leading-relaxed max-w-3xl">
-                I believe in consistent, mindful practice that actually changes how your body feels and functions.
+                My online yoga classes are rooted in authentic Indian yoga
+                traditions and adapted for modern lifestyles — taught clearly in
+                English so you always understand why you are doing each
+                movement.
               </p>
+
               <p className="text-lg sm:text-xl md:text-2xl lg:text-xl xl:text-2xl text-[#f5f1eb] leading-relaxed max-w-3xl">
-                Many of my students come with pain, stiffness, low confidence, or confusion — and over time, they feel the difference, not just see it.
+                Students often come to me with pain, stiffness, stress, or low
+                confidence. With consistent practice, they don’t just see
+                changes — they feel stronger, calmer, and more connected to
+                their bodies.
               </p>
-            </motion.div>
+            </div>
+
+            {/* Hidden SEO Signal */}
+            <p className="sr-only">
+              Experienced Indian yoga instructor offering online yoga classes in
+              English for beginners, seniors, working professionals, and
+              international students.
+            </p>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -1,151 +1,88 @@
-"use client";
-
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-import { Calendar, Clock } from "lucide-react";
-
 const sessions = [
-  {
-    day: "Monday",
-    title: "Strength & Power",
-    description: "Yoga with weights, animal movements, advanced preparation",
-    time: "7:00 – 8:00 PM",
-  },
-  {
-    day: "Wednesday",
-    title: "Flexibility & Balance",
-    description: "Hatha yoga, deep mobility, control & stability",
-    time: "7:00 – 8:00 PM",
-  },
-  {
-    day: "Friday",
-    title: "Core Activation",
-    description: "Suryanamaskar practice + focused core strengthening",
-    time: "7:00 – 8:00 PM",
-  },
+  { day: "Monday", time: "7:00 – 8:00 PM (IST)", what: "Strength & Power Yoga" },
+  { day: "Wednesday", time: "7:00 – 8:00 PM (IST)", what: "Flexibility & Balance Yoga" },
+  { day: "Friday", time: "7:00 – 8:00 PM (IST)", what: "Core Activation & Flow" },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-    },
-  },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.7,
-    },
-  },
-};
-
-function SessionCard({ session }: { session: (typeof sessions)[number] }) {
-  return (
-    <motion.div
-      variants={cardVariants}
-      className="bg-[#faf8f5] rounded-2xl p-6 sm:p-8 md:p-10 shadow-sm hover:shadow-md transition-shadow duration-300"
-    >
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-8">
-        {/* Left Side: Day, Title, Description */}
-        <div className="flex-1 space-y-3">
-          {/* Day Name */}
-          <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#1a3a1a]">
-            {session.day}
-          </h3>
-
-          {/* Session Title */}
-          <h4 className="text-lg sm:text-xl md:text-2xl font-medium text-[#2d5a2d]">
-            {session.title}
-          </h4>
-
-          {/* Description */}
-          <p className="text-base sm:text-lg text-[#2d2d2d] leading-relaxed max-w-2xl">
-            {session.description}
-          </p>
-        </div>
-
-        {/* Right Side: Time */}
-        <div className="shrink-0 lg:text-right">
-          <div className="inline-flex items-center gap-2 lg:flex-col lg:items-end lg:gap-1">
-            <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-[#6b8e5a] lg:hidden" />
-            <span className="text-base sm:text-lg md:text-xl font-medium text-[#6b8e5a] whitespace-nowrap">
-              {session.time}
-            </span>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
 export default function WeeklyLiveSessions() {
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
-
   return (
     <section
       id="weekly-live-sessions"
-      ref={sectionRef}
       className="relative w-full bg-[#1a3a1a] py-16 sm:py-20 md:py-24 lg:py-32 scroll-mt-24 sm:scroll-mt-28"
     >
-      <div className="max-w-5xl mx-auto px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-12 sm:mb-16 md:mb-20"
-        >
-          {/* Section Heading */}
+      <div className="max-w-3xl lg:max-w-5xl xl:max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+        <header className="text-center mb-10 sm:mb-14 lg:mb-16">
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-[#faf8f5] mb-4">
-            Weekly Live Sessions
+            Weekly Live Schedule
           </h2>
+        </header>
 
-          {/* Subheading */}
-          <p className="text-lg sm:text-xl md:text-2xl text-[#f5f1eb] max-w-3xl mx-auto leading-relaxed">
-            Consistent practice builds lasting change.
-          </p>
-        </motion.div>
-
-        {/* Schedule Meta */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-10 sm:mb-12 md:mb-16"
-        >
-          <div className="flex items-center gap-2 text-[#9caf88]">
-            <Calendar className="w-5 h-5" />
-            <span className="text-base sm:text-lg font-medium">
-              Monday | Wednesday | Friday
-            </span>
-          </div>
-          <div className="flex items-center gap-2 text-[#9caf88]">
-            <Clock className="w-5 h-5" />
-            <span className="text-base sm:text-lg font-medium">
-              7:00 – 8:00 PM
-            </span>
-          </div>
-        </motion.div>
-
-        {/* Sessions Cards */}
-        <motion.div
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          variants={containerVariants}
-          className="space-y-6 sm:space-y-8"
-        >
+        {/* Mobile: card layout */}
+        <div className="space-y-3 lg:hidden">
           {sessions.map((session, index) => (
-            <SessionCard key={session.day} session={session} />
+            <div
+              key={session.day}
+              className="bg-[#faf8f5] rounded-xl sm:rounded-2xl p-4 sm:p-5 shadow-md border border-[#ede8e0]/80 flex flex-col gap-2"
+            >
+              <div className="flex items-center justify-between gap-3 flex-wrap">
+                <span className="text-base sm:text-lg font-semibold text-[#1a3a1a]">
+                  {session.day}
+                </span>
+                <span className="text-sm sm:text-base text-[#6b8e5a] font-medium">
+                  {session.time}
+                </span>
+              </div>
+              <p className="text-[#2d2d2d] text-sm sm:text-base">
+                {session.what}
+              </p>
+            </div>
           ))}
-        </motion.div>
+        </div>
+
+        {/* Large: big table */}
+        <div className="hidden lg:block overflow-hidden rounded-2xl xl:rounded-3xl border border-[#9caf88]/30 shadow-xl">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-[#2d5a2d]/90 text-[#faf8f5]">
+                <th className="px-6 xl:px-8 py-5 xl:py-6 text-base xl:text-lg font-semibold uppercase tracking-wider">
+                  Day
+                </th>
+                <th className="px-6 xl:px-8 py-5 xl:py-6 text-base xl:text-lg font-semibold uppercase tracking-wider">
+                  Time
+                </th>
+                <th className="px-6 xl:px-8 py-5 xl:py-6 text-base xl:text-lg font-semibold uppercase tracking-wider">
+                  What we do
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-[#faf8f5]">
+              {sessions.map((session, index) => (
+                <tr
+                  key={session.day}
+                  className={`border-t border-[#ede8e0] ${
+                    index % 2 === 1 ? "bg-[#f5f1eb]/80" : ""
+                  }`}
+                >
+                  <td className="px-6 xl:px-8 py-5 xl:py-6 text-lg xl:text-xl font-medium text-[#1a3a1a]">
+                    {session.day}
+                  </td>
+                  <td className="px-6 xl:px-8 py-5 xl:py-6 text-lg xl:text-xl text-[#2d2d2d]">
+                    {session.time}
+                  </td>
+                  <td className="px-6 xl:px-8 py-5 xl:py-6 text-lg xl:text-xl text-[#2d2d2d]">
+                    {session.what}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <p className="sr-only">
+          Weekly live online yoga classes in English. Monday: Strength & Power
+          Yoga. Wednesday: Flexibility & Balance Yoga. Friday: Core Activation
+          & Flow. 7:00 – 8:00 PM IST.
+        </p>
       </div>
     </section>
   );

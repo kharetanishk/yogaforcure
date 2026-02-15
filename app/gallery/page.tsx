@@ -327,6 +327,13 @@ export default function GalleryPage() {
               <p className="text-lg sm:text-xl text-[#2d2d2d] max-w-2xl mx-auto">
                 Moments from practice
               </p>
+              <p className="mt-4 text-base text-[#2d2d2d]">
+                <a href="/" className="text-[#2d5a2d] hover:text-[#1a3a1a] font-medium underline underline-offset-2">Home</a>
+                {" · "}
+                <a href="/#what-we-offer" className="text-[#2d5a2d] hover:text-[#1a3a1a] font-medium underline underline-offset-2">Programs</a>
+                {" · "}
+                <a href="/#pricing" className="text-[#2d5a2d] hover:text-[#1a3a1a] font-medium underline underline-offset-2">Pricing</a>
+              </p>
               <div className="w-24 h-1 bg-gradient-to-r from-[#9caf88] to-[#d4ddd4] mx-auto rounded-full mt-6" />
             </motion.div>
 

@@ -122,7 +122,7 @@ export default function PricingCarousel() {
       <div className="max-w-7xl mx-auto px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20">
         <div className="text-center mb-10 sm:mb-12">
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-[#1a3a1a] mb-3">
-            Pricing
+            Pricing for group sessions
           </h2>
           <p className="text-lg sm:text-xl md:text-2xl text-[#2d2d2d] max-w-3xl mx-auto leading-relaxed">
             Choose the plan that supports your consistency.

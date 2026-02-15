@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Instagram, Youtube } from "lucide-react";
 
 export default function Footer() {
@@ -8,6 +9,24 @@ export default function Footer() {
   return (
     <footer className="bg-[#1a3a1a] text-[#faf8f5] py-8 px-4">
       <div className="max-w-7xl mx-auto text-center flex flex-col items-center justify-center">
+        {/* Internal links */}
+        <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 mb-4 text-sm sm:text-base" aria-label="Footer navigation">
+          <Link href="/#why-learn-with-me" className="text-[#faf8f5] hover:text-[#9caf88] transition-colors">
+            About
+          </Link>
+          <Link href="/#what-we-offer" className="text-[#faf8f5] hover:text-[#9caf88] transition-colors">
+            Programs
+          </Link>
+          <Link href="/#weekly-live-sessions" className="text-[#faf8f5] hover:text-[#9caf88] transition-colors">
+            Schedule
+          </Link>
+          <Link href="/#pricing" className="text-[#faf8f5] hover:text-[#9caf88] transition-colors">
+            Pricing
+          </Link>
+          <Link href="/gallery" className="text-[#faf8f5] hover:text-[#9caf88] transition-colors">
+            Gallery
+          </Link>
+        </nav>
         <p className="text-sm sm:text-base">
           © {currentYear} Yoga for Cure
         </p>

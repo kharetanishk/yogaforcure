@@ -38,7 +38,10 @@ export default function ClosingCTA() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-lg sm:text-xl md:text-2xl text-[#2d2d2d] leading-relaxed"
           >
-            Book your consultation or join the program today.
+            Book your consultation or join the program today.{" "}
+            <Link href="/#pricing" className="text-[#2d5a2d] hover:text-[#1a3a1a] font-medium no-underline">
+              View pricing
+            </Link>
           </motion.p>
 
           {/* Reflective Text */}
