@@ -1,0 +1,9 @@
+# Yoga by Neha — Production robots.txt
+# https://yogaforcure.in
+
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Sitemap (add app/sitemap.ts for Next.js to generate this)
+Sitemap: https://yogaforcure.in/sitemap.xml

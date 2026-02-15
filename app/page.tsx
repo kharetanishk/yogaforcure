@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import HomeClient from "@/components/HomeClient";
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://yogabyneha.com";
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://yogaforcure.in";
 
 export const metadata: Metadata = {
   title: "Yoga by Neha — Online Indian Yoga Teacher | Strength & Flexibility",

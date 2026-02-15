@@ -47,7 +47,7 @@ export default function Hero({ onHeroReady }: HeroProps) {
         </Link>
       </div>
       {/* Hero Section: on mobile, only heading/text/buttons overlaid on background; on desktop, two-column layout with hero-section.webp */}
-      <main className="relative z-10 container mx-auto px-4 sm:px-6 pt-12 sm:pt-16 lg:pt-0 xl:pt-0 2xl:pt-0 pb-16 sm:pb-24 lg:-mt-20 xl:-mt-24 2xl:-mt-28 min-h-screen flex flex-col justify-center lg:block">
+      <section aria-label="Hero" className="relative z-10 container mx-auto px-4 sm:px-6 pt-12 sm:pt-16 lg:pt-0 xl:pt-0 2xl:pt-0 pb-16 sm:pb-24 lg:-mt-20 xl:-mt-24 2xl:-mt-28 min-h-screen flex flex-col justify-center lg:block">
         <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
           {/* Left Content - on mobile: overlaid on yoga-hero-mobile.jpeg background; on desktop: left column */}
           <div className="relative z-10 max-w-xl mx-auto lg:mx-0 lg:ml-10 lg:pt-24 xl:pt-28 2xl:pt-32 text-center lg:text-left">
@@ -133,7 +133,7 @@ export default function Hero({ onHeroReady }: HeroProps) {
             </div>
           </div>
         </div>
-      </main>
+      </section>
     </div>
   );
 }
