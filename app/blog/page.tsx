@@ -22,6 +22,21 @@ export const metadata: Metadata = {
     url: baseUrl + "/blog",
     siteName: "Yoga by Neha",
     type: "website",
+    images: [
+      {
+        url: baseUrl + "/hero-section.webp",
+        width: 1200,
+        height: 630,
+        alt: "Yoga by Neha — Blog",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Blog — Yoga by Neha | Yoga for Cure",
+    description:
+      "Yoga tips, practice insights, and wellness articles from an experienced Indian yoga teacher.",
+    images: [baseUrl + "/hero-section.webp"],
   },
 };
 

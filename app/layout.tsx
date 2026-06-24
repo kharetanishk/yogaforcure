@@ -17,6 +17,13 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Yoga for Cure by Neha",
   description: "Stop thinking. Start practicing. Your journey to wellness starts here.",
+  icons: {
+    icon: [
+      { url: "/logo.webp", type: "image/webp" },
+    ],
+    apple: { url: "/logo.webp", type: "image/webp" },
+    shortcut: "/logo.webp",
+  },
 };
 
 export default function RootLayout({
