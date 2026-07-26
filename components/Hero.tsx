@@ -63,7 +63,7 @@ export default function Hero({ onHeroReady }: HeroProps) {
               </span>
             </div>
 
-            <h2 className="text-[2rem] leading-[1.12] sm:text-4xl md:text-[2.65rem] lg:text-[2.5rem] xl:text-[2.85rem] 2xl:text-5xl font-bold text-white lg:text-gray-900 mb-3 sm:mb-4">
+            <h2 className="text-[2.25rem] leading-[1.1] sm:text-5xl md:text-[3.25rem] lg:text-[3.1rem] xl:text-[3.75rem] 2xl:text-[4.5rem] font-bold text-white lg:text-gray-900 mb-4 sm:mb-5">
               Build{" "}
               <span className="text-[#51e17a] lg:text-[#2d5a2d]">strength</span>
               . Improve{" "}

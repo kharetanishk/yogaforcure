@@ -1,8 +1,40 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { LogOut, Plus, LayoutDashboard } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
+import { LogOut, Plus, LayoutDashboard, ChevronRight } from "lucide-react";
+
+const LEAF_LABELS: Record<string, string> = {
+  new: "New blog",
+  edit: "Edit blog",
+};
+
+function AdminBreadcrumb() {
+  const pathname = usePathname();
+  const segments = pathname.split("/").filter(Boolean);
+  const leaf = segments[segments.length - 1];
+  const label = leaf !== "dashboard" ? LEAF_LABELS[leaf] : undefined;
+
+  return (
+    <nav aria-label="Breadcrumb" className="mb-4 sm:mb-6">
+      <ol className="flex items-center gap-1.5 text-sm text-[#5b6b5b]">
+        <li>
+          <Link href="/admin/dashboard" className="hover:text-[#2d5a2d] transition-colors">
+            Dashboard
+          </Link>
+        </li>
+        {label && (
+          <li className="flex items-center gap-1.5">
+            <ChevronRight className="w-3.5 h-3.5" />
+            <span aria-current="page" className="font-medium text-[#1a3a1a]">
+              {label}
+            </span>
+          </li>
+        )}
+      </ol>
+    </nav>
+  );
+}
 
 export default function AdminDashboardShell({
   email,
@@ -47,7 +79,10 @@ export default function AdminDashboardShell({
           </div>
         </div>
       </header>
-      <main className="max-w-6xl mx-auto px-3 sm:px-6 py-6 sm:py-8">{children}</main>
+      <main className="max-w-6xl mx-auto px-3 sm:px-6 py-6 sm:py-8">
+        <AdminBreadcrumb />
+        {children}
+      </main>
     </div>
   );
 }
