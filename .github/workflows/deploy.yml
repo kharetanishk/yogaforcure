@@ -10,15 +10,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Uses the ssh already on the runner, so a deploy doesn't depend on
+      # downloading a third-party tool from GitHub releases.
       - name: Deploy application on VPS
-        uses: appleboy/ssh-action@master
+        env:
+          HOST: ${{ secrets.HOST }}
+          USERNAME: ${{ secrets.USERNAME }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          install -m 600 /dev/null ~/.ssh/deploy_key
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
 
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-
-          script: |
+          ssh -n -i ~/.ssh/deploy_key \
+            -o BatchMode=yes \
+            -o ConnectTimeout=30 \
+            -o StrictHostKeyChecking=accept-new \
+            "$USERNAME@$HOST" '
             cd /var/www/yogaforcure
 
             git pull origin main
@@ -26,3 +34,4 @@ jobs:
             docker compose down
 
             docker compose up -d --build
+          '
