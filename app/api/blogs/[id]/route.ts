@@ -1,5 +1,12 @@
 import { NextResponse } from "next/server";
-import { requireAdmin, slugify, contentToHtml } from "@/lib/auth";
+import { requireAdmin, contentToHtml } from "@/lib/auth";
+import {
+  containsHtml,
+  findClash,
+  publishProblems,
+  titleProblem,
+  type BlogPayload,
+} from "@/lib/blogRules";
 import { prisma } from "@/lib/prisma";
 import { deleteFromCloudinary } from "@/lib/cloudinary";
 import { revalidateBlogPaths } from "@/lib/blogRevalidation";
@@ -34,7 +41,7 @@ export async function PUT(request: Request, context: RouteContext) {
   const { id } = await context.params;
 
   try {
-    const body = await request.json();
+    const body = (await request.json()) as BlogPayload;
     const {
       title,
       excerpt,
@@ -53,23 +60,50 @@ export async function PUT(request: Request, context: RouteContext) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    const previousSlug = existing.slug;
-    let slug = existing.slug;
-    if (title && slugify(title) !== slugify(existing.title)) {
-      slug = slugify(title);
-      const clash = await prisma.blog.findFirst({
-        where: { slug, NOT: { id } },
+    // The URL stays the same when a title is edited, so links and rankings
+    // keep working. To move a post, change its slug and add a redirect.
+    if (title && title.trim() !== existing.title) {
+      const badTitle = titleProblem(title);
+      if (badTitle) {
+        return NextResponse.json({ error: badTitle }, { status: 400 });
+      }
+
+      const others = await prisma.blog.findMany({
+        where: { NOT: { id } },
+        select: { id: true, title: true, slug: true },
       });
-      if (clash) slug = `${slug}-${Date.now()}`;
+      const clash = findClash(others, title);
+      if (clash) {
+        return NextResponse.json(
+          {
+            error: `Another post already has this title: "${clash.title}".`,
+            existingId: clash.id,
+          },
+          { status: 409 }
+        );
+      }
+    }
+
+    // Full checks apply when a post goes live, so a small edit to an older
+    // post isn't blocked by SEO fields that were written before these rules.
+    if (published && !existing.published) {
+      const problems = publishProblems({
+        title: title ?? existing.title,
+        excerpt: excerpt ?? existing.excerpt,
+        metaTitle: metaTitle ?? existing.metaTitle,
+        metaDescription: metaDescription ?? existing.metaDescription,
+        images: images ?? existing.images,
+      });
+      if (problems.length > 0) {
+        return NextResponse.json({ error: problems.join(" ") }, { status: 400 });
+      }
     }
 
     const htmlContent =
-      content && !content.includes("<p>") ? contentToHtml(content) : content;
+      content && !containsHtml(content) ? contentToHtml(content) : content;
 
     if (images) {
-      const newPublicIds = new Set(
-        images.map((i: { publicId: string }) => i.publicId)
-      );
+      const newPublicIds = new Set(images.map((i) => i.publicId));
       for (const img of existing.images) {
         if (!newPublicIds.has(img.publicId)) {
           try {
@@ -86,7 +120,6 @@ export async function PUT(request: Request, context: RouteContext) {
       where: { id },
       data: {
         ...(title && { title: title.trim() }),
-        slug,
         ...(excerpt && { excerpt: excerpt.trim() }),
         ...(htmlContent && { content: htmlContent }),
         ...(metaTitle !== undefined && {
@@ -98,25 +131,18 @@ export async function PUT(request: Request, context: RouteContext) {
         ...(published !== undefined && { published: Boolean(published) }),
         ...(images && {
           images: {
-            create: images.map(
-              (
-                img: { url: string; publicId: string; alt?: string },
-                i: number
-              ) => ({
-                url: img.url,
-                publicId: img.publicId,
-                alt: img.alt?.trim() || title?.trim() || existing.title,
-                order: i,
-              })
-            ),
+            create: images.map((img, i) => ({
+              url: img.url,
+              publicId: img.publicId,
+              alt: img.alt?.trim() || title?.trim() || existing.title,
+              order: i,
+            })),
           },
         }),
       },
       include: { images: { orderBy: { order: "asc" } } },
     });
 
-    // If slug changed, invalidate both old and new URLs.
-    revalidateBlogPaths(previousSlug);
     revalidateBlogPaths(blog.slug);
     return NextResponse.json(blog);
   } catch (error) {
@@ -142,6 +168,21 @@ export async function PATCH(request: Request, context: RouteContext) {
         { error: "published field is required" },
         { status: 400 }
       );
+    }
+
+    const existing = await prisma.blog.findUnique({
+      where: { id },
+      include: { images: { orderBy: { order: "asc" } } },
+    });
+    if (!existing) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
+    if (published && !existing.published) {
+      const problems = publishProblems(existing);
+      if (problems.length > 0) {
+        return NextResponse.json({ error: problems.join(" ") }, { status: 400 });
+      }
     }
 
     const blog = await prisma.blog.update({

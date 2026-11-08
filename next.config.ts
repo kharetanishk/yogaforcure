@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import path from "path";
 import { fileURLToPath } from "url";
+import { blogRedirects } from "./lib/redirects";
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
@@ -10,6 +11,13 @@ const nextConfig: NextConfig = {
     root: projectRoot,
   },
   output: "standalone",
+  async redirects() {
+    return blogRedirects.map(({ from, to }) => ({
+      source: `/blog/${from}`,
+      destination: `/blog/${to}`,
+      statusCode: 301 as const,
+    }));
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 31536000,

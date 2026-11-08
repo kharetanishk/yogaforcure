@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import BlogImageManager from "@/components/admin/BlogImageManager";
 
@@ -23,11 +24,23 @@ type BlogFormProps = {
   };
 };
 
-function stripHtml(html: string): string {
+/**
+ * Prepares saved content for the editor. Posts made only of paragraphs become
+ * plain text. Posts with headings, links or lists stay as HTML, because
+ * flattening them would permanently lose that formatting on save.
+ */
+function toEditableContent(html: string): string {
+  const hasRichFormatting = /<(?!\/?(?:p|br)\b)\/?[a-z]/i.test(html);
+  if (hasRichFormatting) return html;
+
   return html
     .replace(/<br\s*\/?>/gi, "\n")
     .replace(/<\/p>\s*<p>/gi, "\n\n")
     .replace(/<[^>]+>/g, "")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, "&")
     .trim();
 }
 
@@ -38,7 +51,7 @@ export default function BlogForm({ initial }: BlogFormProps) {
   const [title, setTitle] = useState(initial?.title ?? "");
   const [excerpt, setExcerpt] = useState(initial?.excerpt ?? "");
   const [content, setContent] = useState(
-    initial?.content ? stripHtml(initial.content) : ""
+    initial?.content ? toEditableContent(initial.content) : ""
   );
   const [metaTitle, setMetaTitle] = useState(initial?.metaTitle ?? "");
   const [metaDescription, setMetaDescription] = useState(
@@ -49,6 +62,7 @@ export default function BlogForm({ initial }: BlogFormProps) {
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [existingPostId, setExistingPostId] = useState<string | null>(null);
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const files = e.target.files;
@@ -81,6 +95,7 @@ export default function BlogForm({ initial }: BlogFormProps) {
     e.preventDefault();
     setSaving(true);
     setError("");
+    setExistingPostId(null);
 
     const payload = {
       title,
@@ -101,7 +116,10 @@ export default function BlogForm({ initial }: BlogFormProps) {
         body: JSON.stringify(payload),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Save failed");
+      if (!res.ok) {
+        setExistingPostId(data.existingId ?? null);
+        throw new Error(data.error || "Save failed");
+      }
       router.push("/admin/dashboard");
       router.refresh();
     } catch (err) {
@@ -116,6 +134,17 @@ export default function BlogForm({ initial }: BlogFormProps) {
       {error && (
         <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-3">
           {error}
+          {existingPostId && (
+            <>
+              {" "}
+              <Link
+                href={`/admin/dashboard/blogs/${existingPostId}/edit`}
+                className="font-semibold underline"
+              >
+                Open the existing post
+              </Link>
+            </>
+          )}
         </p>
       )}
 
@@ -191,6 +220,9 @@ export default function BlogForm({ initial }: BlogFormProps) {
             className="w-full px-4 py-3 rounded-lg border border-[#ede8e0] bg-white focus:outline-none focus:ring-2 focus:ring-[#2d5a2d]/30 text-base"
             placeholder={title || "Defaults to blog title"}
           />
+          <p className="text-xs text-[#2d2d2d]/70 mt-1.5">
+            Up to 60 characters. Now: {(metaTitle || title).trim().length}
+          </p>
         </div>
         <div>
           <label className="block text-sm font-medium text-[#1a3a1a] mb-1.5">
@@ -203,6 +235,9 @@ export default function BlogForm({ initial }: BlogFormProps) {
             className="w-full px-4 py-3 rounded-lg border border-[#ede8e0] bg-white focus:outline-none focus:ring-2 focus:ring-[#2d5a2d]/30 resize-y text-base"
             placeholder={excerpt || "Defaults to excerpt"}
           />
+          <p className="text-xs text-[#2d2d2d]/70 mt-1.5">
+            140-160 characters. Now: {(metaDescription || excerpt).trim().length}
+          </p>
         </div>
         <label className="flex items-center gap-3 cursor-pointer">
           <input

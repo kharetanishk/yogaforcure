@@ -56,15 +56,6 @@ export async function requireAdmin() {
   return session;
 }
 
-export function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
 export function contentToHtml(text: string): string {
   return text
     .split(/\n\n+/)

@@ -1,5 +1,13 @@
 import { NextResponse } from "next/server";
-import { requireAdmin, slugify, contentToHtml } from "@/lib/auth";
+import { requireAdmin, contentToHtml } from "@/lib/auth";
+import {
+  containsHtml,
+  createSlug,
+  findClash,
+  publishProblems,
+  titleProblem,
+  type BlogPayload,
+} from "@/lib/blogRules";
 import { prisma } from "@/lib/prisma";
 import { revalidateBlogPaths } from "@/lib/blogRevalidation";
 
@@ -24,7 +32,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const body = await request.json();
+    const body = (await request.json()) as BlogPayload;
     const {
       title,
       excerpt,
@@ -42,11 +50,47 @@ export async function POST(request: Request) {
       );
     }
 
-    let slug = slugify(title);
-    const existing = await prisma.blog.findUnique({ where: { slug } });
-    if (existing) slug = `${slug}-${Date.now()}`;
+    const badTitle = titleProblem(title);
+    if (badTitle) {
+      return NextResponse.json({ error: badTitle }, { status: 400 });
+    }
 
-    const htmlContent = content.includes("<p>")
+    if (published) {
+      const problems = publishProblems({
+        title,
+        excerpt,
+        metaTitle,
+        metaDescription,
+        images: images ?? [],
+      });
+      if (problems.length > 0) {
+        return NextResponse.json({ error: problems.join(" ") }, { status: 400 });
+      }
+    }
+
+    const slug = createSlug(title);
+    if (!slug) {
+      return NextResponse.json(
+        { error: "The title needs some English letters or numbers for its URL." },
+        { status: 400 }
+      );
+    }
+
+    const posts = await prisma.blog.findMany({
+      select: { id: true, title: true, slug: true },
+    });
+    const clash = findClash(posts, title, slug);
+    if (clash) {
+      return NextResponse.json(
+        {
+          error: `A post like this already exists: "${clash.title}". Edit that post instead of creating a new one.`,
+          existingId: clash.id,
+        },
+        { status: 409 }
+      );
+    }
+
+    const htmlContent = containsHtml(content)
       ? content
       : contentToHtml(content);
 
@@ -61,17 +105,12 @@ export async function POST(request: Request) {
         published: Boolean(published),
         adminId: session.adminId,
         images: {
-          create: (images ?? []).map(
-            (
-              img: { url: string; publicId: string; alt?: string },
-              i: number
-            ) => ({
-              url: img.url,
-              publicId: img.publicId,
-              alt: img.alt?.trim() || title.trim(),
-              order: i,
-            })
-          ),
+          create: (images ?? []).map((img, i) => ({
+            url: img.url,
+            publicId: img.publicId,
+            alt: img.alt?.trim() || title.trim(),
+            order: i,
+          })),
         },
       },
       include: { images: true },
