@@ -35,9 +35,6 @@ export default function Footer() {
           <Link href="/#weekly-live-sessions" className="text-[#faf8f5] hover:text-[#9caf88] transition-colors">
             Schedule
           </Link>
-          <Link href="/#pricing" className="text-[#faf8f5] hover:text-[#9caf88] transition-colors">
-            Pricing
-          </Link>
           <Link href="/gallery" className="text-[#faf8f5] hover:text-[#9caf88] transition-colors">
             Gallery
           </Link>

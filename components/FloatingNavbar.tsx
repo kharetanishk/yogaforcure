@@ -23,7 +23,6 @@ const navLinks = [
   },
   { href: "#about", label: "About" },
   { href: "#schedule", label: "Schedule" },
-  { href: "#pricing", label: "Pricing" },
   { href: "#gallery", label: "Gallery" },
   { href: "/blog", label: "Blog" },
 ];
@@ -93,7 +92,6 @@ export default function FloatingNavbar() {
       "#youtube-membership": "youtube-membership",
       "#corporate-wellness": "corporate-wellness",
       "#one-on-one-sessions": "one-on-one-sessions",
-      "#pricing": "pricing",
       "#gallery": "gallery",
     };
 

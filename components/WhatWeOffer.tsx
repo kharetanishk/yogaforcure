@@ -82,13 +82,6 @@ export default function WhatWeOffer() {
             Choose from live group classes, personalized one-on-one sessions, or
             self-paced online yoga programs — all taught in clear English.{" "}
             <Link
-              href="/#pricing"
-              className="text-[#2d5a2d] hover:text-[#1a3a1a] font-medium no-underline"
-            >
-              View pricing
-            </Link>
-            {" · "}
-            <Link
               href="/#weekly-live-sessions"
               className="text-[#2d5a2d] hover:text-[#1a3a1a] font-medium no-underline"
             >

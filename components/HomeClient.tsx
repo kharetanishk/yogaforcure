@@ -10,7 +10,6 @@ import WhatWeOffer from "@/components/WhatWeOffer";
 import WhyLearnWithMe from "@/components/WhyLearnWithMe";
 import WhatYoullGain from "@/components/WhatYoullGain";
 import WeeklyLiveSessions from "@/components/WeeklyLiveSessions";
-import PricingCarousel from "@/components/PricingCarousel";
 import GallerySlideshow from "@/components/GallerySlideshow";
 import ClientReviewReels from "@/components/ClientReviewReels";
 import ClosingCTA from "@/components/ClosingCTA";
@@ -46,9 +45,6 @@ export default function HomeClient() {
           <WhyLearnWithMe />
           <WhatYoullGain />
           <WeeklyLiveSessions />
-          <section id="pricing" className="scroll-mt-24">
-            <PricingCarousel />
-          </section>
           <section
             id="gallery"
             className="relative min-h-screen bg-gradient-to-b from-[#f5f1eb] to-[#ede8e0] pt-16 pb-20 lg:pt-24 lg:pb-32 scroll-mt-24"
