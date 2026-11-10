@@ -5,6 +5,7 @@ import FloatingNavbar from "@/components/FloatingNavbar";
 import Footer from "@/components/Footer";
 import BlogImageCollage from "@/components/blog/BlogImageCollage";
 import { prisma } from "@/lib/prisma";
+import { parseDoc } from "@/lib/blogBuilder";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://yogaforcure.in";
 
@@ -56,6 +57,9 @@ export default async function BlogPostPage({ params }: Props) {
 
   if (!blog) notFound();
 
+  const builder = parseDoc(blog.content)?.meta;
+  const authorName = builder?.authorName.trim() || "Neha";
+
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -65,8 +69,10 @@ export default async function BlogPostPage({ params }: Props) {
     dateModified: blog.updatedAt.toISOString(),
     author: {
       "@type": "Person",
-      name: "Neha",
-      jobTitle: "Yoga Instructor",
+      name: authorName,
+      ...(builder?.authorTagline.trim()
+        ? { description: builder.authorTagline.trim() }
+        : { jobTitle: "Yoga Instructor" }),
     },
     publisher: {
       "@type": "Organization",
@@ -124,21 +130,31 @@ export default async function BlogPostPage({ params }: Props) {
         {/* ── Hero ── */}
         <div className="blog-post-hero">
           <div className="blog-post-hero-inner">
-            <div className="blog-hero-chip">Article &nbsp;·&nbsp; {formattedDate}</div>
+            <div className="blog-hero-chip">
+              {builder
+                ? [builder.category, builder.date || formattedDate, builder.readTime]
+                    .filter((part) => part.trim())
+                    .join("  ·  ")
+                : <>Article &nbsp;·&nbsp; {formattedDate}</>}
+            </div>
             <h1 className="blog-post-h1">{blog.title}</h1>
             <p className="blog-post-sub">{blog.excerpt}</p>
             <div className="blog-post-hero-bottom">
               <div className="blog-author-row">
-                <div className="blog-av">N</div>
+                <div className="blog-av">{authorName[0].toUpperCase()}</div>
                 <div>
-                  <div className="blog-av-name">Neha — Yoga For Cure</div>
+                  <div className="blog-av-name">
+                    {builder ? authorName : "Neha — Yoga For Cure"}
+                  </div>
                   <div className="blog-av-role">
-                    10+ years teaching&nbsp;·&nbsp;3,200+ students worldwide
+                    {builder
+                      ? builder.authorTagline
+                      : <>10+ years teaching&nbsp;·&nbsp;3,200+ students worldwide</>}
                   </div>
                 </div>
               </div>
               <div className="blog-hero-meta">
-                <span>{formattedDate}</span>
+                <span>{builder?.date.trim() || formattedDate}</span>
                 <span>Yoga For Cure</span>
               </div>
             </div>

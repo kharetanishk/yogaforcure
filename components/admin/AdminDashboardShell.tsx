@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { LogOut, Plus, LayoutDashboard, ChevronRight } from "lucide-react";
+import { LogOut, Plus, LayoutDashboard, LayoutTemplate, ChevronRight } from "lucide-react";
 
 const LEAF_LABELS: Record<string, string> = {
   new: "New blog",
   edit: "Edit blog",
+  builder: "Blog Builder",
 };
 
 function AdminBreadcrumb() {
@@ -67,6 +68,13 @@ export default function AdminDashboardShell({
             >
               <Plus className="w-4 h-4" />
               New blog
+            </Link>
+            <Link
+              href="/admin/dashboard/blogs/builder"
+              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-lg bg-[#c99228] text-[#1a3a1a] text-sm font-semibold hover:bg-[#e0ad48] transition-colors"
+            >
+              <LayoutTemplate className="w-4 h-4" />
+              Blog Builder
             </Link>
             <button
               type="button"

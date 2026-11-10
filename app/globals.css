@@ -736,3 +736,142 @@ body {
   .rhythm-grid { grid-template-columns: 1fr; }
   .blog-stat { padding: 12px 14px; }
 }
+
+/* ============================================================
+   BLOG BUILDER BLOCKS (lib/blogBuilder.ts)
+   ============================================================ */
+.prose-blog h2[id],
+.prose-blog h3[id] { scroll-margin-top: 100px; }
+
+.bb-toc {
+  background: #fff;
+  border: 1px solid var(--blog-rule);
+  border-radius: 14px;
+  padding: 22px 26px;
+  margin: 0 0 40px;
+}
+.bb-toc-title {
+  font-size: 11px !important;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--blog-amber);
+  margin: 0 0 10px !important;
+}
+.prose-blog .bb-toc ol { margin: 0 0 0 1.25rem; }
+.prose-blog .bb-toc li { margin-bottom: 4px; font-size: 16px; }
+.prose-blog .bb-toc a { color: var(--blog-deep); text-decoration: none; }
+.prose-blog .bb-toc a:hover { color: var(--blog-mid); text-decoration: underline; }
+
+.bb-stat-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  background: var(--blog-deep);
+  border-radius: 16px;
+  margin: 40px 0;
+  overflow: hidden;
+}
+.bb-stat {
+  padding: 22px 20px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.1);
+}
+.bb-stat:last-child { border-right: none; }
+.bb-stat-n {
+  display: block;
+  font-family: var(--font-merriweather, Georgia, serif);
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 700;
+  color: var(--blog-amber);
+  line-height: 1.2;
+}
+.bb-stat-l {
+  display: block;
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgba(255,255,255,0.75);
+  margin-top: 6px;
+}
+
+.bb-big-stat {
+  margin: 44px 0;
+  padding: 30px 32px;
+  background: var(--blog-amber-pale);
+  border-radius: 18px;
+  text-align: center;
+}
+.bb-big-n {
+  display: block;
+  font-family: var(--font-merriweather, Georgia, serif);
+  font-size: clamp(48px, 9vw, 80px);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--blog-rust);
+}
+.prose-blog .bb-big-l {
+  margin: 14px auto 0;
+  max-width: 480px;
+  font-size: 18px;
+  color: var(--blog-deep);
+}
+.bb-big-src { margin-top: 12px; font-size: 13px; color: var(--blog-muted); }
+
+.bb-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 40px 0;
+}
+.bb-compare-col {
+  border-radius: 16px;
+  padding: 24px 24px 8px;
+  border: 1px solid var(--blog-rule);
+}
+.bb-compare-a { background: #fff; }
+.bb-compare-b { background: var(--blog-sage-pale); border-color: rgba(60,107,80,0.25); }
+.prose-blog .bb-compare-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.bb-compare-a .bb-compare-title { color: var(--blog-rust); }
+.bb-compare-b .bb-compare-title { color: var(--blog-mid); }
+.prose-blog .bb-compare ul { list-style: none; margin-left: 0; }
+.prose-blog .bb-compare li { position: relative; padding-left: 24px; font-size: 16px; line-height: 1.6; }
+.bb-compare li::before { position: absolute; left: 0; font-weight: 700; }
+.bb-compare-a li::before { content: "✕"; color: var(--blog-rust); }
+.bb-compare-b li::before { content: "✓"; color: var(--blog-mid); }
+
+.bb-search { margin: 40px 0; }
+.bb-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid #dfe1e5;
+  border-radius: 999px;
+  padding: 13px 22px;
+  box-shadow: 0 2px 8px rgba(32,33,36,0.12);
+  max-width: 560px;
+}
+.bb-search-icon { color: #9aa0a6; font-size: 18px; line-height: 1; transform: rotate(-45deg); }
+.bb-search-q { font-size: 16px; color: #202124; }
+.prose-blog .bb-search-note { margin: 14px 0 0 22px; font-size: 15px; color: var(--blog-muted); }
+
+.bb-pull-cite {
+  display: block;
+  margin-top: 16px;
+  font-size: 13px;
+  font-style: normal;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+}
+
+@media (max-width: 600px) {
+  .bb-compare { grid-template-columns: 1fr; }
+  .bb-stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .bb-stat:last-child { border-bottom: none; }
+}

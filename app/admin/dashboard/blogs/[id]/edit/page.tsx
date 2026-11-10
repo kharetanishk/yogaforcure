@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import BlogForm from "@/components/admin/BlogForm";
+import BlogBuilder from "@/components/admin/BlogBuilder";
+import { parseDoc } from "@/lib/blogBuilder";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -12,6 +14,30 @@ export default async function EditBlogPage({ params }: Props) {
   });
 
   if (!blog) notFound();
+
+  const images = blog.images.map((img) => ({
+    url: img.url,
+    publicId: img.publicId,
+    alt: img.alt,
+  }));
+
+  const doc = parseDoc(blog.content);
+  if (doc) {
+    return (
+      <BlogBuilder
+        initial={{
+          id: blog.id,
+          title: blog.title,
+          excerpt: blog.excerpt,
+          metaTitle: blog.metaTitle ?? "",
+          metaDescription: blog.metaDescription ?? "",
+          published: blog.published,
+          images,
+          doc,
+        }}
+      />
+    );
+  }
 
   return (
     <div>
@@ -27,11 +53,7 @@ export default async function EditBlogPage({ params }: Props) {
           metaTitle: blog.metaTitle ?? "",
           metaDescription: blog.metaDescription ?? "",
           published: blog.published,
-          images: blog.images.map((img) => ({
-            url: img.url,
-            publicId: img.publicId,
-            alt: img.alt,
-          })),
+          images,
         }}
       />
     </div>
