@@ -4,7 +4,7 @@ import HomeClient from "@/components/HomeClient";
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://yogaforcure.in";
 
 export const metadata: Metadata = {
-  title: "Yoga by Neha — Online Indian Yoga Teacher | Strength & Flexibility",
+  title: { absolute: "Yoga by Neha — Online Indian Yoga Teacher | Strength & Flexibility" },
   description:
     "Learn with an experienced Indian yoga teacher online. Live classes in English for strength, flexibility, and lasting wellbeing. Join from anywhere.",
   alternates: {
@@ -31,6 +31,7 @@ export const metadata: Metadata = {
     title: "Yoga by Neha — Online Indian Yoga Teacher | Strength & Flexibility",
     description:
       "Learn with an experienced Indian yoga teacher online. Live classes in English for strength, flexibility, and lasting wellbeing. Join from anywhere.",
+    images: [baseUrl + "/hero-section.webp"],
   },
 };
 

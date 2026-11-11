@@ -10,15 +10,17 @@ const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://yogaforcure.in";
 export const revalidate = 300;
 export const dynamic = "force-dynamic";
 
+const blogTitle = "Yoga Articles and Practice Guides";
+const blogDescription =
+  "Practical yoga guides on hormonal health, back pain, stress and beginner practice, written by Neha, an experienced Indian yoga teacher who teaches online.";
+
 export const metadata: Metadata = {
-  title: "Blog — Yoga by Neha | Yoga for Cure",
-  description:
-    "Yoga tips, practice insights, and wellness articles from an experienced Indian yoga teacher. Online yoga classes in English.",
+  title: blogTitle,
+  description: blogDescription,
   alternates: { canonical: baseUrl + "/blog" },
   openGraph: {
-    title: "Blog — Yoga by Neha | Yoga for Cure",
-    description:
-      "Yoga tips, practice insights, and wellness articles from an experienced Indian yoga teacher.",
+    title: `${blogTitle} | Yoga by Neha`,
+    description: blogDescription,
     url: baseUrl + "/blog",
     siteName: "Yoga by Neha",
     type: "website",
@@ -33,9 +35,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Blog — Yoga by Neha | Yoga for Cure",
-    description:
-      "Yoga tips, practice insights, and wellness articles from an experienced Indian yoga teacher.",
+    title: `${blogTitle} | Yoga by Neha`,
+    description: blogDescription,
     images: [baseUrl + "/hero-section.webp"],
   },
 };

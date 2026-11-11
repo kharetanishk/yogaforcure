@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import BlogImageCollage from "@/components/blog/BlogImageCollage";
 import { prisma } from "@/lib/prisma";
 import { parseDoc } from "@/lib/blogBuilder";
+import { SITE_NAME, cleanText, looksLikeSlug, pageDescription, pageTitle } from "@/lib/seo";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://yogaforcure.in";
 
@@ -19,31 +20,35 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     where: { slug, published: true },
     include: { images: { orderBy: { order: "asc" }, take: 1 } },
   });
-  if (!blog) return { title: "Not found" };
+  if (!blog) return { title: "Not found", robots: { index: false, follow: false } };
 
-  const title = blog.metaTitle || blog.title;
-  const description = blog.metaDescription || blog.excerpt;
-  const ogImage = blog.images[0]?.url;
+  const stored = blog.metaTitle && !looksLikeSlug(blog.metaTitle) ? blog.metaTitle : blog.title;
+  const title = pageTitle(stored);
+  const description = pageDescription(blog.metaDescription || blog.excerpt);
+  const cover = blog.images[0];
+  const url = `${baseUrl}/blog/${slug}`;
 
   return {
-    title: `${title} — Yoga by Neha`,
+    title,
     description,
-    alternates: { canonical: `${baseUrl}/blog/${slug}` },
+    alternates: { canonical: url },
     openGraph: {
-      title,
+      title: `${title} | ${SITE_NAME}`,
       description,
-      url: `${baseUrl}/blog/${slug}`,
-      siteName: "Yoga by Neha",
+      url,
+      siteName: SITE_NAME,
+      locale: "en_IN",
       type: "article",
       publishedTime: blog.createdAt.toISOString(),
       modifiedTime: blog.updatedAt.toISOString(),
-      ...(ogImage && { images: [{ url: ogImage, alt: blog.title }] }),
+      authors: [parseDoc(blog.content)?.meta.authorName.trim() || "Neha"],
+      ...(cover && { images: [{ url: cover.url, alt: cover.alt || pageTitle(blog.title) }] }),
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: `${title} | ${SITE_NAME}`,
       description,
-      ...(ogImage && { images: [ogImage] }),
+      ...(cover && { images: [cover.url] }),
     },
   };
 }
@@ -64,7 +69,7 @@ export default async function BlogPostPage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: blog.title,
-    description: blog.excerpt,
+    description: cleanText(blog.excerpt),
     datePublished: blog.createdAt.toISOString(),
     dateModified: blog.updatedAt.toISOString(),
     author: {

@@ -3,7 +3,7 @@ import { getSession } from "@/lib/auth";
 import AdminLoginForm from "@/components/admin/AdminLoginForm";
 
 export const metadata = {
-  title: "Admin Login — Yoga for Cure",
+  title: "Admin Login",
   robots: { index: false, follow: false },
 };
 

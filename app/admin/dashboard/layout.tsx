@@ -3,7 +3,7 @@ import { getSession } from "@/lib/auth";
 import AdminDashboardShell from "@/components/admin/AdminDashboardShell";
 
 export const metadata = {
-  title: "Dashboard — Admin",
+  title: "Admin Dashboard",
   robots: { index: false, follow: false },
 };
 

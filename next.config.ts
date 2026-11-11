@@ -12,11 +12,21 @@ const nextConfig: NextConfig = {
   },
   output: "standalone",
   async redirects() {
-    return blogRedirects.map(({ from, to }) => ({
-      source: `/blog/${from}`,
-      destination: `/blog/${to}`,
-      statusCode: 301 as const,
-    }));
+    return [
+      // Serve the site on one host only. Only fires when nginx passes the
+      // original Host header through; nginx can do the same job (see Phase 2 notes).
+      {
+        source: "/:path*",
+        has: [{ type: "host" as const, value: "www.yogaforcure.in" }],
+        destination: "https://yogaforcure.in/:path*",
+        statusCode: 301 as const,
+      },
+      ...blogRedirects.map(({ from, to }) => ({
+        source: `/blog/${from}`,
+        destination: `/blog/${to}`,
+        statusCode: 301 as const,
+      })),
+    ];
   },
   images: {
     formats: ["image/avif", "image/webp"],
