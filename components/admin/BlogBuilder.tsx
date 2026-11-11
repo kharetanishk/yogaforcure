@@ -201,7 +201,7 @@ export default function BlogBuilder({ initial }: BlogBuilderProps) {
     <div className="rounded-2xl border border-[#ddd5c8] overflow-hidden bg-[#f3ede3] shadow-sm">
       {/* Top bar */}
       <div className="bg-[#1b2e22] text-white px-4 sm:px-5 py-3 flex items-center justify-between gap-3">
-        <h1 className="font-semibold text-sm sm:text-base">Blog Builder</h1>
+        <h2 className="font-semibold text-sm sm:text-base">Blog Builder</h2>
         <div className="flex items-center gap-3">
           <span className="hidden sm:inline text-xs text-white/60">Preview updates as you type</span>
           <button
