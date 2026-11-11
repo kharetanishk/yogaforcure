@@ -6,7 +6,10 @@ import Footer from "@/components/Footer";
 import BlogImageCollage from "@/components/blog/BlogImageCollage";
 import { prisma } from "@/lib/prisma";
 import { parseDoc } from "@/lib/blogBuilder";
-import { SITE_NAME, cleanText, looksLikeSlug, pageDescription, pageTitle } from "@/lib/seo";
+import { SITE_NAME, looksLikeSlug, pageDescription, pageTitle } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
+import { extractFaq } from "@/lib/faq";
+import { blogPosting, breadcrumb, countWords, faqPage, graph } from "@/lib/schema";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://yogaforcure.in";
 
@@ -65,53 +68,31 @@ export default async function BlogPostPage({ params }: Props) {
   const builder = parseDoc(blog.content)?.meta;
   const authorName = builder?.authorName.trim() || "Neha";
 
-  const articleSchema = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: blog.title,
-    description: cleanText(blog.excerpt),
-    datePublished: blog.createdAt.toISOString(),
-    dateModified: blog.updatedAt.toISOString(),
-    author: {
-      "@type": "Person",
-      name: authorName,
-      ...(builder?.authorTagline.trim()
-        ? { description: builder.authorTagline.trim() }
-        : { jobTitle: "Yoga Instructor" }),
-    },
-    publisher: {
-      "@type": "Organization",
-      name: "Yoga by Neha",
-      url: baseUrl,
-    },
-    mainEntityOfPage: `${baseUrl}/blog/${slug}`,
-    ...(blog.images[0] && { image: blog.images.map((img) => img.url) }),
-  };
-
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: baseUrl + "/",
+  const url = `${baseUrl}/blog/${slug}`;
+  // The FAQ is read from the post's own text, so it always matches what readers see.
+  const faq = extractFaq(blog.content);
+  const postSchema = graph(
+    blogPosting({
+      url,
+      headline: pageTitle(blog.title),
+      description: pageDescription(blog.metaDescription || blog.excerpt),
+      images: blog.images.map((img) => img.url),
+      datePublished: blog.createdAt,
+      dateModified: blog.updatedAt,
+      wordCount: countWords(blog.content),
+      section: builder?.category.trim() || undefined,
+      author: {
+        name: authorName,
+        description: builder?.authorTagline.trim() || undefined,
       },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Blog",
-        item: `${baseUrl}/blog`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: blog.title,
-        item: `${baseUrl}/blog/${slug}`,
-      },
-    ],
-  };
+    }),
+    breadcrumb([
+      { name: "Home", path: "/" },
+      { name: "Blog", path: "/blog" },
+      { name: pageTitle(blog.title), path: `/blog/${slug}` },
+    ]),
+    ...(faq.length > 0 ? [faqPage(faq, url)] : [])
+  );
 
   const formattedDate = blog.updatedAt.toLocaleDateString("en-GB", {
     year: "numeric",
@@ -121,14 +102,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
+      <JsonLd data={postSchema} />
       <FloatingNavbar />
 
       <main className="min-h-screen overflow-x-hidden">

@@ -4,6 +4,9 @@ import Image from "next/image";
 import FloatingNavbar from "@/components/FloatingNavbar";
 import Footer from "@/components/Footer";
 import { prisma } from "@/lib/prisma";
+import JsonLd from "@/components/JsonLd";
+import { pageTitle } from "@/lib/seo";
+import { blogCollection, breadcrumb, graph } from "@/lib/schema";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://yogaforcure.in";
 
@@ -48,8 +51,20 @@ export default async function BlogPage() {
     orderBy: { updatedAt: "desc" },
   });
 
+  const blogSchema = graph(
+    blogCollection(
+      { url: `${baseUrl}/blog`, name: blogTitle, description: blogDescription },
+      blogs.map((blog) => ({ url: `${baseUrl}/blog/${blog.slug}`, name: pageTitle(blog.title) }))
+    ),
+    breadcrumb([
+      { name: "Home", path: "/" },
+      { name: "Blog", path: "/blog" },
+    ])
+  );
+
   return (
     <>
+      <JsonLd data={blogSchema} />
       <FloatingNavbar />
       <main className="min-h-screen bg-linear-to-b from-[#f5f1eb] to-[#ede8e0] pt-20 sm:pt-24 pb-16 sm:pb-20 overflow-x-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12">

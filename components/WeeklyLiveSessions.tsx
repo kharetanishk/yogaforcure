@@ -1,8 +1,18 @@
-const sessions = [
-  { day: "Monday", time: "7:00 – 8:00 PM (IST)", what: "Strength & Power Yoga" },
-  { day: "Wednesday", time: "7:00 – 8:00 PM (IST)", what: "Flexibility & Balance Yoga" },
-  { day: "Friday", time: "7:00 – 8:00 PM (IST)", what: "Core Activation & Flow" },
-];
+import { CLASS_TIMES, CLASS_TIMES_TEXT, WEEKLY_SESSIONS } from "@/lib/site";
+
+// Same list feeds the Course structured data (lib/schema.ts).
+const sessions = WEEKLY_SESSIONS.map((s) => ({ day: s.day, what: s.focus }));
+const times = CLASS_TIMES.map((t) => `${t.label} (IST)`);
+
+function Times({ className }: { className: string }) {
+  return (
+    <span className={`flex flex-col ${className}`}>
+      {times.map((time) => (
+        <span key={time}>{time}</span>
+      ))}
+    </span>
+  );
+}
 
 export default function WeeklyLiveSessions() {
   return (
@@ -28,9 +38,7 @@ export default function WeeklyLiveSessions() {
                 <span className="text-base sm:text-lg font-semibold text-[#1a3a1a]">
                   {session.day}
                 </span>
-                <span className="text-sm sm:text-base text-[#6b8e5a] font-medium">
-                  {session.time}
-                </span>
+                <Times className="text-sm sm:text-base text-[#6b8e5a] font-medium text-right" />
               </div>
               <p className="text-[#2d2d2d] text-sm sm:text-base">
                 {session.what}
@@ -67,7 +75,7 @@ export default function WeeklyLiveSessions() {
                     {session.day}
                   </td>
                   <td className="px-6 xl:px-8 py-5 xl:py-6 text-lg xl:text-xl text-[#2d2d2d]">
-                    {session.time}
+                    <Times className="gap-1" />
                   </td>
                   <td className="px-6 xl:px-8 py-5 xl:py-6 text-lg xl:text-xl text-[#2d2d2d]">
                     {session.what}
@@ -81,7 +89,7 @@ export default function WeeklyLiveSessions() {
         <p className="sr-only">
           Weekly live online yoga classes in English. Monday: Strength & Power
           Yoga. Wednesday: Flexibility & Balance Yoga. Friday: Core Activation
-          & Flow. 7:00 – 8:00 PM IST.
+          & Flow. Two batches each day: {CLASS_TIMES_TEXT}.
         </p>
       </div>
     </section>

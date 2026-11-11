@@ -1,5 +1,4 @@
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://yogaforcure.in";
-export const SITE_NAME = "Yoga by Neha";
+export { SITE_NAME, SITE_URL } from "@/lib/site";
 
 export const DESCRIPTION_MAX = 160;
 

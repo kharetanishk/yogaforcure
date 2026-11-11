@@ -14,6 +14,7 @@ import GallerySlideshow from "@/components/GallerySlideshow";
 import ClientReviewReels from "@/components/ClientReviewReels";
 import ClosingCTA from "@/components/ClosingCTA";
 import Testimonials from "@/components/Testimonials";
+import HomeFaq from "@/components/HomeFaq";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 
@@ -63,6 +64,7 @@ export default function HomeClient() {
           </section>
           <ClientReviewReels />
           <Testimonials />
+          <HomeFaq />
           <ClosingCTA />
 
           {/* Other sections temporarily hidden for video hero evaluation */}
